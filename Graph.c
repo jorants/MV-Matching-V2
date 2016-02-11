@@ -14,8 +14,10 @@ MVGraph * new_graph(int size){
   init_list(res->bridges,list_MVBridge,size/2+1);
 
   init_list(res->last_ddfs.nodes_seen,MVNodeP,3);
-  init_list(res->green_stack,MVNodeP,3);
-  init_list(res->red_stack,MVNodeP,3);
+  init_list(res->green_stack,MVEdge,3);
+  init_list(res->red_stack,MVEdge,3);
+  init_list(res->path_found,MVEdge,3);
+
   
   res->matchnum = 0;
   res->bridgenum = 0;
@@ -37,6 +39,12 @@ void delete_graph(MVGraph * g){
 
   uninit_list(g->bridges);
   uninit_list(g->levels);
+
+  uninit_list(g->last_ddfs.nodes_seen);
+  uninit_list(g->green_stack);
+  uninit_list(g->red_stack);
+  uninit_list(g->path_found);
+
   MVNodeP itt3;
   for_eachp(itt3,g->nodes,{
       uninit_node(itt3);
@@ -93,7 +101,8 @@ void add_to_level(MVGraph * g,int level,MVNodeP node){
     alloc_in_list(g->levels,level_list);
     init_p_list(level_list,MVNodeP,2);
   }
-  add_to_list(get(g->levels,level),node);  
+  add_to_list(get(g->levels,level),node);
+  g->todonum++;
 }
 
 
@@ -113,4 +122,5 @@ void add_to_bridges(MVGraph * g,int level,MVNodeP n1,MVNodeP n2){
   alloc_in_list(get(g->bridges,level),b);
   b->n1 = n1;
   b->n2 = n2;
+  g->bridgenum++;
 }

@@ -106,5 +106,8 @@
 #define get(l,p) (l.list[p])
 #define getp(l,p) (l.list+p)
 #define first(l) (l.list[0])
-#define last(l) (l.list[l->length-1])
+#define last(l) (l.list[l.length-1])
+#define pop(l) l.length ? (l.list[(--l.length)]) : NULL
+#define popp(l) l.length ? (l.list+(--l.length)) : NULL
+
 #endif

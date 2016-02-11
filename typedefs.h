@@ -11,6 +11,11 @@ typedef struct{
 } MVBridge;
 
 typedef struct{
+  MVNodeP n1;
+  MVNodeP n2;
+} MVEdge;
+
+typedef struct{
   MVNodeP n;
   int pos;
 } MVNodePos;

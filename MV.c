@@ -30,6 +30,7 @@ void max_match(MVGraph * g){
   while(g->nodes.length / 2 > g->matchnum && max_match_phase(g)){
     reset_graph(g);
   }
+
 }
 
 int max_match_phase(MVGraph * g){
@@ -38,8 +39,11 @@ int max_match_phase(MVGraph * g){
 
   
   for(i=0;i<g->nodes.length/2+1 && (!found);i++){
-    printf("----------------------- %i ------------------\n",i);
-    
+    //printf("----------------------- %i ------------------\n",i);
+    //printf(":: %i %i \n",g->todonum ,g->bridgenum);
+    if(g->todonum<=0 && g->bridgenum<=0){
+      return false;
+    }
     MIN(g,i);
     found = MAX(g,i);
     
@@ -58,6 +62,7 @@ inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
     }
     set_min_level(to,level+1);
     add_to_list(to->preds,from);
+    to->number_preds++;
     MVNodePos * np;
     alloc_in_list(from->pred_to,np);
     np->n = to;
@@ -82,9 +87,9 @@ inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
 
 void MIN(MVGraph * g,int i){
   MVNodeP current;
-
+  
   for_each(current,get(g->levels,i),{
-
+      g->todonum--;
       if(i%2==0){
 	//need unmatched edge
 	MVNodeP edge;
@@ -100,7 +105,6 @@ void MIN(MVGraph * g,int i){
 
       }else if(current->match != UNMATCHED){
 	//need matched edge
-
 	step_to(g,current->match,current,i);
       }
 
@@ -109,16 +113,28 @@ void MIN(MVGraph * g,int i){
 
 int MAX(MVGraph * g,int i){
   MVBridge * current;
-
+  int found = false;
   for_eachp(current,get(g->bridges,i),{
+      g->bridgenum--;
       MVNodeP  n1 = current->n1;
       MVNodeP  n2 = current->n2;
       if(n1->deleted || n2->deleted)
 	continue;
-      printf("Bridge: %i %i \n",n1->N,n2->N);
-      DDFS(g,n1,n2);
+      //      printf("Bridge: %i %i \n",n1->N,n2->N);
+      int result = DDFS(g,n1,n2);
+      if(result == DDFS_EMPTY)
+	continue;
+      else if(result == DDFS_PATH){
+	find_path(n1,n2,g);
+	augment_path(g);
+	remove_path(g);
+	found = true;
+      }else{
+	//DDFS_PETAL
+      }
+	 
     });
   
-  return false;
+  return found;
 }
 

@@ -22,8 +22,9 @@ typedef struct MVGraph{
   int bridgenum;
   int todonum;
   DDFS_result last_ddfs;
-  list_MVNodeP green_stack;
-  list_MVNodeP red_stack;
+  list_MVEdge green_stack;
+  list_MVEdge red_stack;
+  list_MVNodeP path_found;
 } MVGraph;
 
 
@@ -32,4 +33,5 @@ void delete_graph(MVGraph * g);
 void reset_graph(MVGraph * g);
 void MV_add_edge(MVGraph * g,int a,int b, int greedy);
 void add_to_level(MVGraph * g,int level,MVNodeP node);
+void add_to_bridges(MVGraph * g,int level,MVNodeP n1,MVNodeP n2);
 #endif
