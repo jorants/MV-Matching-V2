@@ -22,6 +22,7 @@ typedef struct MVNode{
   MVNodeP ddfs_green;
   MVNodeP ddfs_red;
   int deleted;
+  int visited;
   int number_preds;
   list_MVNodeP hanging_bridges;
   int ddfs_seen;
@@ -47,8 +48,8 @@ void reset_node(MVNodeP node);
   else						\
     nodep->even_level = level;			\
 
-#define outer(node) node->evenlevel < node->oddlevel
-#define inner(node) node->evenlevel >= node->oddlevel
+#define outer(node) node->even_level < node->odd_level
+#define inner(node) node->even_level >= node->odd_level
 
 #define bud(node) node->bud;
 

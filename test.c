@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<string.h>
 
 #include <sys/time.h>
 
@@ -15,11 +16,22 @@ list_struct(int);
 
 int main(int argc, char** argv){
   int gr = false;
-  if(argc>1)
+  if(argc>2)
     gr = true;
-  
+  else if (argc<2)
+    exit(0);
+
+
+  char *fn = argv[1];
+  FILE * fp;
+  if(strcmp(fn,"-") == 0){
+    fp = stdin;
+  }else
+    {
+      fp = fopen (fn, "r");
+    }
   int V;
-  int res = scanf("%i\n",&V);
+  int res = fscanf(fp,"%i\n",&V);
   if(res!=1)
     {
       printf("Error in input\n");
@@ -30,7 +42,7 @@ int main(int argc, char** argv){
   
   while(res == 2){
     int n1,n2;
-    res = scanf("%i %i\n",&n1,&n2);
+    res = fscanf(fp,"%i %i\n",&n1,&n2);
     MV_add_edge(g,n1,n2,gr);
   }
 
@@ -45,15 +57,19 @@ int main(int argc, char** argv){
 
   max_match(g);
   gettimeofday(&end, NULL);
-  /*
+  int correct  = true;
+  
   MVNodeP node;
   for_eachp(node,g->nodes,{
-      if(node->match)
-	printf(":: %i -- %i\n",node->N,node->match->N);
-      else
-	printf(":: %i not matched\n",node->N);
+      if(node->match && node->match->match != node){
+	correct = false;
+	break;
+      }
     });
-  */
+  
   printf("%f\n",dt(start,end));
+  printf("%i\n",g->matchnum);
+  
+  printf("%i\n",correct);
   return 0;
 }

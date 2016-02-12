@@ -34,10 +34,12 @@ void reset_node(MVNodeP node){
   node->number_preds = 0;
   node->hanging_bridges.length = 0;
   node->ddfs_seen = false;
+  node->visited = false;
 }
 
 
 inline MVNodeP bud_star(MVNodeP c){
   MVNodeP b = bud(c);
+  //debug(">> %i\n",c->N);
   return b ?  bud_star(b) : c;
 }

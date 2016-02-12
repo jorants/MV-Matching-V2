@@ -13,6 +13,18 @@ def random_bi(n1,n2,p):
                 g.add_edge(i,n1+j)
     return g
 
+
+def random_g(n,p):
+    g = nx.Graph()
+    for i in range(n):
+        g.add_node(i)
+    for i in range(n):
+        for j in range(i):
+            if random.random()<p:
+                g.add_edge(i,j)
+    return g
+
+
 def to_form_new(g):
     res = "%i\n" % (g.number_of_nodes())
     for e in g.edges():
@@ -35,67 +47,122 @@ def toform(G):
 
 def libmv(G,inform = False):
     if not inform:
-        G = toform(G)
+        G = toform(G).strip()
         
-    out = docmd(["./match","-s","-m"],G)
-    return float(out.split("\n")[3].split(":")[1].strip())
+    out = docmd(["./match","-s","-m"],G).strip()
+    count = int(out.split("\n")[-1].split(":")[1].strip())
+    time = float(out.split("\n")[3].split(":")[1].strip())
+    return time,count
 
 
 def lemon(G,inform = False):
     if not inform:
         G = toform(G)
         
-    out = docmd(["./match","-s","-l"],G)
-    return float(out.split("\n")[3].split(":")[1].strip())
+    out = docmd(["./match","-s","-l"],G).strip()
+
+    count = int(out.split("\n")[-1].split(":")[1].strip())
+    time = float(out.split("\n")[3].split(":")[1].strip())
+    return time,count
 
 
 def libmv_greedy(G,inform = False):
     if not inform:
         G = toform(G)
         
-    out = docmd(["./match","-L","-s","-m"],G)
-    return float(out.split("\n")[3].split(":")[1].strip())
+    out = docmd(["./match","-L","-s","-m"],G).strip()
+    count = int(out.split("\n")[-1].split(":")[1].strip())
+    time = float(out.split("\n")[3].split(":")[1].strip())
+    return time,count
 
 
 def mvjoran(G,inform = False):
     if not inform:
         G = to_form_new(G)
 
-    out = docmd(["./main"],G)
-    return float(out)
+    out = docmd(["./main","-"],G).strip()
+    if out.split("\n")[2] == "0":
+        print "OEPS!"
+        open("errorfile","w").write(G)
+        raise ValueError("Not a good matching")
+    return float(out.split("\n")[0]),int(out.split("\n")[1])
 
 def mvjoran_greedy(G,inform = False):
     if not inform:
         G = to_form_new(G)
-    try:
-        out = docmd(["./main","greedy"],G)
-        return float(out)
-    except Exception:
-        open("graph","w").write(G)
-        exit()
-
-x = range(5,500,5)
-lem = []
-mv = []
-mvg = []
-jor = []
-jorg = []
-for i in x:
-    print i
-    G = random_bi(i,i,10./i)
-    lem.append(lemon(G))
-    mv.append(libmv(G))
-    mvg.append(libmv_greedy(G))
-    jor.append(mvjoran(G))
-    jorg.append(mvjoran_greedy(G))
     
-from matplotlib import pyplot as plt
-plt.plot(x,lem,color="y")
-plt.plot(x,jor,color="b")
-plt.plot(x,mv,color="r")
-plt.plot(x,jorg,color="g")
-plt.plot(x,mvg,color="k")
+    out = docmd(["./main","-","greedy"],G)
+    if out.split("\n")[2] == "0":
+        print "OEPS!"
+        open("errorfile","w").write(G)
+        raise ValueError("Not a good matching")
+
+    return float(out.split("\n")[0]),int(out.split("\n")[1])
+
+
+
+def plot_bi(x,p = lambda i: 10./i):
+    lem = []
+    mv = []
+    mvg = []
+    jor = []
+    jorg = []
+    for i in x:
+        print i
+        G = random_bi(i,i,p(i))
+        res = [lemon(G),libmv(G),libmv_greedy(G),mvjoran(G),mvjoran_greedy(G)]
+        lem.append(res[0][0])
+        mv.append(res[1][0])
+        mvg.append(res[2][0])
+        jor.append(res[3][0])
+        jorg.append(res[4][0])
+        counts =  map(lambda x: x[1],res)
+        print counts
+        if len(set(counts))>1:
+            print counts
     
-plt.show()
+    from matplotlib import pyplot as plt
+    plt.plot(x,lem,color="y")
+    plt.plot(x,jor,color="b")
+    plt.plot(x,mv,color="r")
+    plt.plot(x,jorg,color="g")
+    plt.plot(x,mvg,color="k")
+    plt.show()
 
 
+
+X = range(10,3000,100)
+#plot(X,lambda i: 0.1)
+#plot_bi(X)
+
+
+def plot(x,p = lambda i: 10./i):
+    lem = []
+    mv = []
+    mvg = []
+    jor = []
+    jorg = []
+    for i in x:
+        print i
+        G = random_g(i,p(i))
+        res = [lemon(G),libmv(G),libmv_greedy(G),mvjoran(G),mvjoran_greedy(G)]
+        lem.append(res[0][0])
+        mv.append(res[1][0])
+        mvg.append(res[2][0])
+        jor.append(res[3][0])
+        jorg.append(res[4][0])
+        counts =  map(lambda x: x[1],res)
+        print counts
+        if len(set(counts))>1:
+            print counts
+    
+    from matplotlib import pyplot as plt
+    plt.plot(x,lem,color="y")
+    plt.plot(x,jor,color="b")
+    plt.plot(x,mv,color="r")
+    plt.plot(x,jorg,color="g")
+    plt.plot(x,mvg,color="k")
+    plt.show()
+
+X = range(10,500,5)
+plot(X)

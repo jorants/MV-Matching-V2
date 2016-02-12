@@ -26,8 +26,10 @@ void max_match(MVGraph * g){
 	set_min_level(itt3,0);
       }
     });  
-  
+  int p = 0;
+  debug("========== Phase %i ===========\n",p++);
   while(g->nodes.length / 2 > g->matchnum && max_match_phase(g)){
+    debug("========== Phase %i ===========\n",p++);
     reset_graph(g);
   }
 
@@ -39,7 +41,7 @@ int max_match_phase(MVGraph * g){
 
   
   for(i=0;i<g->nodes.length/2+1 && (!found);i++){
-    //printf("----------------------- %i ------------------\n",i);
+    debug("----------------------- %i ------------------\n",i);
     //printf(":: %i %i \n",g->todonum ,g->bridgenum);
     if(g->todonum<=0 && g->bridgenum<=0){
       return false;
@@ -77,7 +79,6 @@ inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
       add_to_list(to->hanging_bridges,from);
       add_to_list(from->hanging_bridges,to);
     }else{
-
       add_to_bridges(g,(ten-1)/2,to,from);
     }
 
@@ -90,6 +91,7 @@ void MIN(MVGraph * g,int i){
   
   for_each(current,get(g->levels,i),{
       g->todonum--;
+      debug("Walking from %i {\n",current->N);
       if(i%2==0){
 	//need unmatched edge
 	MVNodeP edge;
@@ -130,7 +132,27 @@ int MAX(MVGraph * g,int i){
 	remove_path(g);
 	found = true;
       }else{
-	//DDFS_PETAL
+	//Found a petal
+	MVNodeP itt;
+	MVNodeP b = g->last_ddfs.bottleneck;
+	int current_ten = i*2+1;
+	for_each(itt,g->last_ddfs.nodes_seen,{
+	    //set the bbud for all nodes
+	    debug("Bud (%i) = %i\n",itt->N,b->N);
+	    itt->bud = b;
+	    //set the maxlevel
+	    set_max_level(itt,current_ten - itt->min_level);
+	    MVNodeP hanging;
+	    for_each(hanging,itt->hanging_bridges,{
+		//check all the hanging bridges to see if they are known now
+		int hanging_ten = tenacity(itt,hanging);
+		if(hanging_ten != UNSET){
+		  add_to_bridges(g,(hanging_ten-1)/2,itt,hanging);
+		}
+	      });
+	    
+	  });
+	
       }
 	 
     });

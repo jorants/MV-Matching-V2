@@ -1,6 +1,10 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
+
+#define debug(...) 
+#define debug(...) printf(__VA_ARGS__)
+
 typedef struct MVNode MVNode;
 typedef struct MVGraph MVGraph;
 typedef MVNode * MVNodeP;
