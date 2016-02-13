@@ -17,16 +17,17 @@
 
 
 
-#define L(e) e->n2->min_level
+#define L(e) bud_star(e->n2)->min_level
 #define Sr g->red_stack
 #define Sg g->green_stack
 
 #define prepare_next(Nx)			\
-  if(Nx && Nx->n1) {				\
-    Nx->n1->below = Nx->n2;			\
+  if(Nx) {					\
+    if(Nx->n1)					\
+      Nx->n1->below = Nx->n2;			\
     Nx->n2 = bud_star(Nx->n2);			\
-  }//TODO check bud_star
-//TODO fix for one side empty (Done?)
+  }
+
 
 #define step_into(C,Nx,S)				\
   prepare_next(Nx)					\
@@ -48,75 +49,61 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
   result->bottleneck = NULL;
   g->green_stack.length = 0;
   g->red_stack.length = 0;
-  MVNodeP G = bud_star(green_top);
-  MVNodeP R = bud_star(red_top);
-  if(R == G){
+  MVNodeP G = NULL;
+  MVNodeP R = NULL;
+  
+  MVEdge * Ng;
+  alloc_in_list((Sg),Ng);			
+  Ng = popp(Sg);
+  Ng->n1 = NULL;
+  Ng->n2 = green_top;
+
+  MVEdge * Nr;
+  alloc_in_list((Sr),Nr);			
+  Nr = popp(Sr);
+  Nr->n1 = NULL;
+  Nr->n2 = red_top;
+
+
+  if(bud_star(Nr->n2) == bud_star(Ng->n2)){
     return DDFS_EMPTY;
-  }else if (G->min_level == 0 && R->min_level == 0){
+  }else if (Ng->n2->min_level == 0 && Nr->n2->min_level == 0){
     return DDFS_PATH; //return imidetly for one edge paths
   }
 
-  MVEdge * Ng;
-  if(G->min_level == 0){
-    alloc_in_list((Sg),Ng);					\
-    Ng = popp(Sg);
-    Ng->n1 = NULL;
-    Ng->n2 = G;
-    G = NULL;
-  }else{
-    add_pred_to_stack(G,Sg);
-    Ng = popp(Sg); //next green
-
-    Ng->n1->below = Ng->n2;
-    Ng->n2 = bud_star(Ng->n2);
-  }
-
-  MVEdge * Nr;
-  if(R->min_level == 0){
-    alloc_in_list((Sr),Nr);					\
-    Nr = popp(Sr);
-    Nr->n1 = NULL;
-    Nr->n2 = R;
-    R = NULL;
-  }else{
-    add_pred_to_stack(R,Sr);
-    Nr = popp(Sr); //next red
-    Nr->n1->below = Nr->n2;
-    Nr->n2 = bud_star(Nr->n2);
-  }
   
+
   debug("Starting:");
   if(Nr->n2)
     debug(" %i",Nr->n2->N);
   if(Ng->n2)
     debug(" %i\n",Ng->n2->N);
-
-  if(R){
-    add_to_list(result->nodes_seen,R);
-    R->ddfs_green = G;
-    R->ddfs_red = R;
-  }
-  if(G){
-    add_to_list(result->nodes_seen,G);  
-    G->ddfs_green = G;
-    G->ddfs_red = R;
-  }
-
-  while((R && R->min_level >0) || (G && G->min_level>0)){
+  
+  
+  while( R==NULL || G==NULL || //we are starting
+	 R->min_level >0 || G->min_level>0){    //we need some walking still
     
     while(L(Nr) != L(Ng)){
       while(L(Nr) > L(Ng)){
 	step_into(R,Nr,Sr);
-
       }
       while(L(Nr) < L(Ng)){
-
 	step_into(G,Ng,Sg);
       }
     }
+    
     debug(":: %i %i \n",Nr->n2->N,Ng->n2->N);
-    if(Nr->n2  == Ng->n2){
-      if(Sr.length > 0){
+    debug("  -> Sr : ");
+    MVEdge itt;
+    for_each(itt,Sr,{debug(" %i",itt.n2->N);});
+    debug("\n  -> Sg : ");
+    for_each(itt,Sg,{debug(" %i",itt.n2->N);});
+    debug("\n");
+
+    
+    if(bud_star(Nr->n2)  == bud_star(Ng->n2)){
+      //backtrack
+      if(Sr.length > 0){ 
 	prepare_next(Nr);
 	Nr = popp(Sr);
 	R = Nr->n1;

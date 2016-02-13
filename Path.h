@@ -23,7 +23,7 @@ inline MVNodeP jump_bridge(MVNodeP cur);
 MVNodeP walk_blossom(list_MVNodeP * list,MVNodeP cur);
 //walks down until it reacheds the bud of a blossom
 //It does not add the bud, it does add the first node
-MVNodeP walk_blossom_down(list_MVNodeP * list,MVNodeP cur);
+MVNodeP walk_blossom_down(list_MVNodeP * list,MVNodeP cur,MVNodeP bud);
 //Walks up untill it reaches a bridge
 //It does add the bridge and the node it starts on
 MVNodeP walk_blossom_up(list_MVNodeP * list,MVNodeP cur);

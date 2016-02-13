@@ -43,7 +43,8 @@ int main(int argc, char** argv){
   while(res == 2){
     int n1,n2;
     res = fscanf(fp,"%i %i\n",&n1,&n2);
-    MV_add_edge(g,n1,n2,gr);
+    if(res==2)
+      MV_add_edge(g,n1,n2,gr);
   }
 
   /*

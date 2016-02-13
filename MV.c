@@ -122,10 +122,14 @@ int MAX(MVGraph * g,int i){
       MVNodeP  n2 = current->n2;
       if(n1->deleted || n2->deleted)
 	continue;
+
       //      printf("Bridge: %i %i \n",n1->N,n2->N);
       int result = DDFS(g,n1,n2);
-      if(result == DDFS_EMPTY)
+      if(result == DDFS_EMPTY){
+	debug("EMPTY\n");
+	
 	continue;
+      }
       else if(result == DDFS_PATH){
 	find_path(n1,n2,g);
 	augment_path(g);

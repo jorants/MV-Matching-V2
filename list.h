@@ -12,14 +12,14 @@
 
 
 
+//we can not derefrence the lists outside the loop since they might change during the loop
+
 //Loop over a list that is pointed to  and use the value
 #define for_p_each(itt,l,f)						\
   do{									\
     int list_itterator;							\
-    typeof((l)->list) lll = (l)->list;					\
-    int length = l->length;						\
-    for(list_itterator=0;list_itterator < length ;list_itterator++){	\
-      itt = lll[list_itterator];					\
+    for(list_itterator=0;list_itterator < l->length ;list_itterator++){	\
+      itt = (l)->list[list_itterator];					\
       f }								\
   }while(0);
 
@@ -28,9 +28,8 @@
 #define for_each(itt,l,f)						\
   do{									\
     int list_itterator;							\
-    typeof(l.list) lll = l.list;					\
-    for(list_itterator=0;list_itterator < l.length ;list_itterator++){ \
-      itt = lll[list_itterator];					\
+    for(list_itterator=0;list_itterator < l.length ;list_itterator++){	\
+      itt = l.list[list_itterator];					\
       f }								\
   }while(0);
 
@@ -39,9 +38,8 @@
 #define for_eachp(itt,l,f)						\
   do{									\
     int list_itterator;							\
-    typeof(l.list) lll = l.list;					\
-    for(list_itterator=0;list_itterator < l.length ;list_itterator++){ \
-      itt = lll+list_itterator;					\
+    for(list_itterator=0;list_itterator < l.length ;list_itterator++){	\
+      itt = l.list+list_itterator;					\
       f }								\
   }while(0);
 

@@ -164,5 +164,5 @@ def plot(x,p = lambda i: 10./i):
     plt.plot(x,mvg,color="k")
     plt.show()
 
-X = range(10,500,5)
-plot(X)
+X = range(10,1000,10)
+plot_bi(X)

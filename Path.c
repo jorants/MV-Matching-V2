@@ -44,6 +44,7 @@ inline MVNodeP jump_bridge(MVNodeP cur){
   return cur->ddfs_green == cur ? cur->ddfs_red : cur->ddfs_green;
 }
 
+//TODO, dont use bud to identefy blossoms
 
 //Walks a blossom from the entry node to the bud.
 //It does not add the bud, it does add the entry node
@@ -52,12 +53,13 @@ MVNodeP walk_blossom(list_MVNodeP * list,MVNodeP cur){
 
   if(outer(cur)){
     //just walk down
-    cur = walk_blossom_down(list,cur);
+    cur = walk_blossom_down(list,cur,NULL);
   }else{
     //walk up, then down
     cur = walk_blossom_up(list,cur);
-    cur = jump_bridge(cur);
-    cur = walk_blossom_down(list,cur);
+    MVNodeP before = cur;
+    cur = jump_bridge(cur);    
+    cur = walk_blossom_down(list,cur,before);
   }
   debug("}\n");
   return cur;
@@ -65,13 +67,18 @@ MVNodeP walk_blossom(list_MVNodeP * list,MVNodeP cur){
 
 //walks down until it reacheds the bud of a blossom
 //It does not add the bud, it does add the first node
-MVNodeP walk_blossom_down(list_MVNodeP * list,MVNodeP cur){
-  debug("Walk_blossom down { \n");
+MVNodeP walk_blossom_down(list_MVNodeP * list,MVNodeP cur,MVNodeP before){
+  debug("Walk_blossom down (%i,%i){ \n",cur->N, before ? before->N : -1);
+  if(before==NULL)
+    before = cur;
   MVNodeP b = cur->bud;
+  debug("--- %i\n",b->N);
   //todo add jump detection
   while(cur && cur != b){
-    if( cur->bud != b){
+      if( cur->ddfs_green != before->ddfs_green ||
+	cur->ddfs_red != before->ddfs_red){
       //Stept into a blossom
+
       debug("Steped into blossom\n");
       cur = walk_blossom(list,cur);
     }else{
