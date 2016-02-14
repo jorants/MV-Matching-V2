@@ -15,15 +15,7 @@ def random_bi(n1,n2,p):
 
 
 def random_g(n,p):
-    g = nx.Graph()
-    for i in range(n):
-        g.add_node(i)
-    for i in range(n):
-        for j in range(i):
-            if random.random()<p:
-                g.add_edge(i,j)
-    return g
-
+    return nx.fast_gnp_random_graph(n,p)
 
 def to_form_new(g):
     res = "%i\n" % (g.number_of_nodes())
@@ -194,6 +186,10 @@ def plot_two(x,p = lambda i: 10./i):
     from matplotlib import pyplot as plt
     plt.plot(x,lem,color="y")
     plt.plot(x,jorg,color="g")
-    plt.show()
+    plt.savefig("plot.png")
+
 
     
+X =  range(1,1000000,5000)
+plot_two(X)
+

@@ -25,14 +25,13 @@ typedef struct MVNode{
   int visited;
   int number_preds;
   list_MVNodeP hanging_bridges;
-  int ddfs_seen;
 } MVNode;
 
 
 
 void init_node(MVNodeP node,int label);
 void uninit_node(MVNodeP node);
-void reset_node(MVNodeP node);
+inline void reset_node(MVNodeP node);
 
 #define set_min_level(nodep,level)			\
   nodep->min_level = level;				\

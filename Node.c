@@ -18,7 +18,7 @@ void uninit_node(MVNodeP node){
 }
 
 
-void reset_node(MVNodeP node){
+inline void reset_node(MVNodeP node){
   node->min_level = oo;
   node->max_level = UNSET;
   node->odd_level = UNSET;
@@ -33,7 +33,6 @@ void reset_node(MVNodeP node){
   node->deleted = false;
   node->number_preds = 0;
   node->hanging_bridges.length = 0;
-  node->ddfs_seen = false;
   node->visited = false;
 }
 
