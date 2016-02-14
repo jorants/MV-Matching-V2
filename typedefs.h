@@ -3,7 +3,7 @@
 
 
 #define debug(...) 
-#define debug(...) printf(__VA_ARGS__)
+//#define debug(...) printf(__VA_ARGS__)
 
 typedef struct MVNode MVNode;
 typedef struct MVGraph MVGraph;

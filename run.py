@@ -48,10 +48,14 @@ def toform(G):
 def libmv(G,inform = False):
     if not inform:
         G = toform(G).strip()
-        
-    out = docmd(["./match","-s","-m"],G).strip()
-    count = int(out.split("\n")[-1].split(":")[1].strip())
-    time = float(out.split("\n")[3].split(":")[1].strip())
+    try:
+        out = docmd(["./match","-s","-m"],G).strip()
+        count = int(out.split("\n")[-1].split(":")[1].strip())
+        time = float(out.split("\n")[3].split(":")[1].strip())
+    except Exception as e:
+        import simp
+        simp.simp_data(G)
+        sys.exit()
     return time,count
 
 
@@ -81,23 +85,28 @@ def mvjoran(G,inform = False):
         G = to_form_new(G)
 
     out = docmd(["./main","-"],G).strip()
-    if out.split("\n")[2] == "0":
-        print "OEPS!"
-        open("errorfile","w").write(G)
-        raise ValueError("Not a good matching")
-    return float(out.split("\n")[0]),int(out.split("\n")[1])
+    try:
+        return float(out.split("\n")[0]),int(out.split("\n")[1])    
+    except Exception as e:
+        import simp
+        simp.simp_data(G)
+        sys.exit()
+
+
 
 def mvjoran_greedy(G,inform = False):
     if not inform:
         G = to_form_new(G)
     
     out = docmd(["./main","-","greedy"],G)
-    if out.split("\n")[2] == "0":
-        print "OEPS!"
-        open("errorfile","w").write(G)
-        raise ValueError("Not a good matching")
-
-    return float(out.split("\n")[0]),int(out.split("\n")[1])
+    try:
+        return float(out.split("\n")[0]),int(out.split("\n")[1])    
+    except Exception as e:
+        print e
+        fp = open("error.bu","w")
+        fp.write(G)
+        fp.close()
+        sys.exit()
 
 
 
@@ -164,5 +173,27 @@ def plot(x,p = lambda i: 10./i):
     plt.plot(x,mvg,color="k")
     plt.show()
 
-X = range(10,1000,10)
-plot_bi(X)
+
+def plot_two(x,p = lambda i: 10./i):
+    lem = []
+    mv = []
+    mvg = []
+    jor = []
+    jorg = []
+    for i in x:
+        print i
+        G = random_g(i,p(i))
+        res = [lemon(G),mvjoran_greedy(G)]
+        lem.append(res[0][0])
+        jorg.append(res[1][0])
+        counts =  map(lambda x: x[1],res)
+        print counts
+        if len(set(counts))>1:
+            print counts
+    
+    from matplotlib import pyplot as plt
+    plt.plot(x,lem,color="y")
+    plt.plot(x,jorg,color="g")
+    plt.show()
+
+    

@@ -38,8 +38,11 @@
   C->ddfs_red = red_top;				\
   add_to_list(result->nodes_seen,C);			\
   add_pred_to_stack(C,S);				\
-  Nx = popp(S);					
-
+  if(S.length > 0)					\
+    Nx = popp(S);					\
+  else\
+    Nx = NULL;
+   
 
 
 int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
@@ -64,7 +67,9 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
   Nr->n1 = NULL;
   Nr->n2 = red_top;
 
-
+  MVEdge red_before,green_before;
+  
+  
   if(bud_star(Nr->n2) == bud_star(Ng->n2)){
     return DDFS_EMPTY;
   }else if (Ng->n2->min_level == 0 && Nr->n2->min_level == 0){
@@ -83,13 +88,18 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
   while( R==NULL || G==NULL || //we are starting
 	 R->min_level >0 || G->min_level>0){    //we need some walking still
     
-    while(L(Nr) != L(Ng)){
-      while(L(Nr) > L(Ng)){
+    while(Nr && Ng && L(Nr) != L(Ng)){
+      while(Nr && L(Nr) > L(Ng)){ //quit if we have no stack left
 	step_into(R,Nr,Sr);
       }
-      while(L(Nr) < L(Ng)){
+      if(Nr == NULL) //backtracked till end of stack, jump back tpo lowest bottleneck
+	Nr = &red_before;
+      while(Ng && L(Nr) < L(Ng)){
 	step_into(G,Ng,Sg);
       }
+      if(Ng == NULL) //backtracked till end of stack jump back
+	Ng = &green_before;
+
     }
     
     debug(":: %i %i \n",Nr->n2->N,Ng->n2->N);
@@ -103,11 +113,15 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
     
     if(bud_star(Nr->n2)  == bud_star(Ng->n2)){
       //backtrack
-      if(Sr.length > 0){ 
+      if(Sr.length > 0){
+	red_before.n1 = Nr->n1;
+	red_before.n2 = Nr->n2;
 	prepare_next(Nr);
 	Nr = popp(Sr);
 	R = Nr->n1;
       }else if(Sg.length > 0){
+	green_before.n1 = Nr->n1;
+	green_before.n2 = Nr->n2;
 	prepare_next(Ng);
 	Ng = popp(Sg);
 	G = Ng->n1;

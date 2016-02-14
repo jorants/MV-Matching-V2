@@ -56,13 +56,13 @@ int max_match_phase(MVGraph * g){
 
 
 inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
-
-  if(to->min_level >= level+1){
-
-    if(to->min_level != level+1){
-      add_to_level(g,level+1,to);
+  level++;
+  int tl = to->min_level;
+  if(tl >= level){
+    if(tl != level){
+      add_to_level(g,level,to);
     }
-    set_min_level(to,level+1);
+    set_min_level(to,level);
     add_to_list(to->preds,from);
     to->number_preds++;
     MVNodePos * np;
@@ -71,9 +71,7 @@ inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
     np->pos = to->preds.length-1;
   }else{
     //found bridge
-
     int ten = tenacity(to,from);
-
     if(ten == UNSET){
       //hanging bridge
       add_to_list(to->hanging_bridges,from);
