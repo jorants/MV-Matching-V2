@@ -5,6 +5,7 @@ import subprocess
 from subprocess import PIPE
 import sys
 from time import time
+
 def random_bi(n1,n2,p):
     g = nx.Graph()
     for i in range(n1+n2):
@@ -82,6 +83,20 @@ def lemon(G,inform = False):
 
     t0 = time()
     out = docmd(["./match","-s","-l"],G).strip()
+    t1 = time()
+    td = t1-t0
+        
+    count = int(out.split("\n")[-1].split(":")[1].strip())
+    t = float(out.split("\n")[3].split(":")[1].strip())
+    return t,count,td/10.
+
+
+def lemon_greedy(G,inform = False):
+    if not inform:
+        G = toform(G)
+
+    t0 = time()
+    out = docmd(["./match","-s","-l","-a"],G).strip()
     t1 = time()
     td = t1-t0
         
@@ -236,7 +251,7 @@ def plot_hell(x):
     for i in x:
         print i
         G = hell(i)
-        res = [lemon(G),mvjoran_greedy(G)]
+        res = [lemon_greedy(G),mvjoran_greedy(G)]
         lem.append(res[0][0])
         jorg.append(res[1][0])
         lemT.append(res[0][2])
@@ -257,5 +272,6 @@ def plot_hell(x):
     ax1.plot(x,jorgT,color="b")
     plt.savefig("plot.png")
 
-X = range(10,1000,10)
-plot_two(X)
+if __name__ == "__main__":
+    X = range(10,1000,10)
+    plot_two(X,lambda i: 0.1)

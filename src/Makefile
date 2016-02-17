@@ -1,6 +1,6 @@
 OBCC=gcc
 LDFLAGS= 
-CFLAGS = -Wall -O3
+CFLAGS = -Wall -)3
 EXEC = main
 # Should be equivalent to your list of C files, if you don't build selectively
 SRC=$(wildcard *.c)
