@@ -1,21 +1,7 @@
-OBCC=gcc
-LDFLAGS= -pg
-CFLAGS = -Wall -pg -ggdb
-EXEC = main
-# Should be equivalent to your list of C files, if you don't build selectively
-SRC=$(wildcard *.c)
+all:
+	cd src && make
+	cp src/main bin/
 
-OBJ=$(SRC:.c=.o)
-
-all: $(OBJ)
-	$(CC) -o $(EXEC) $(OBJ) $(LDFLAGS)
-
-%.o: %.c %.h typedefs.h
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-
-clean: clear
-	rm -f main
-
-clear:
-	rm -f *.o
+clean:
+	cd src && make clean
+	rm -f bin/main
