@@ -99,7 +99,7 @@ MVNodeP walk_blossom_up(list_MVNodeP * list,MVNodeP cur){
     add_to_list((*list),cur);
     debug( "%i\n",cur->N);
     if(cur->above && cur->above->below != cur  &&//at a crossing or a jump 
-       cur->above->below->bud == cur){ //at jump
+       (cur->above->below->ddfs_green !=  cur->ddfs_green || cur->above->below->ddfs_red !=  cur->ddfs_red)){
       //About to jump over something
       int before = list->length;
       MVNodeP bud = cur->above->below;
