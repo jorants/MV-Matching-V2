@@ -16,8 +16,8 @@ void MIN(MVGraph * g,int i);
 int MAX(MVGraph * g,int i);
 
 
-inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level);
-inline int tenacity(MVNodeP n1,MVNodeP n2);
+void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level);
+int tenacity(MVNodeP n1,MVNodeP n2);
 
 
 #endif
