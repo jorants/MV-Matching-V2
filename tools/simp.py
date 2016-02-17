@@ -11,11 +11,11 @@ def docmd(cmd,input):
 
 
 
-def remove(G,i):
+def remove(G,i,k):
     G = G.split("\n")
     l = G[0]
     e = G[1:-2]
-    e = e[:i]+e[i+1:]
+    e = e[:i]+e[i+k:]
     return l +"\n"+ "\n".join(e) + "\nEND\n"
 
 
@@ -32,7 +32,7 @@ def mvjoran(G,inform = False):
     if not inform:
         G = to_form_new(G)
 
-    out = docmd(["./main","-"],G).strip()
+    out = docmd(["./main","-","greedy"],G).strip()
 
     if out.split("\n")[2] == "0":
         raise ValueError("Something wrong")
@@ -41,7 +41,7 @@ def mvjoran(G,inform = False):
 
 
 
-def simplefy(fn):
+def simplefy(fn,k=1):
     data = open(fn).read()
     err = errors(data)
     print err
@@ -49,7 +49,7 @@ def simplefy(fn):
         return
     i = 0
     while i < len(data.split("\n"))-3:
-        tmp = remove(data,i)
+        tmp = remove(data,i,k)
         if err == errors(tmp):
             print "Removed:",i
             data = tmp
@@ -57,7 +57,7 @@ def simplefy(fn):
             fp.write(data)
             fp.close()
         else:
-            i+=1
+            i+=k/10+1
 
 def random_bi(n1,n2,p):
     g = nx.Graph()
@@ -140,12 +140,16 @@ if __name__ == "__main__":
     if len(sys.argv)<2:
         find_error(1000,10./500.)
     else:
-        simplefy(sys.argv[1])
-        simplefy(sys.argv[1])
-        simplefy(sys.argv[1])
-        simplefy(sys.argv[1])
-        simplefy(sys.argv[1])
-        simplefy(sys.argv[1])
+        if len(sys.argv)>2:
+            k = int(sys.argv[2])
+        else:
+            k=1
+        simplefy(sys.argv[1],k)
+        simplefy(sys.argv[1],k)
+        simplefy(sys.argv[1],k/2+1)
+        simplefy(sys.argv[1],k/2+1)
+        simplefy(sys.argv[1],k/4+1)
+        simplefy(sys.argv[1],k/4+1)
         simplefy(sys.argv[1])
         simplefy(sys.argv[1])
         simplefy_nums(sys.argv[1])
