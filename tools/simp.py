@@ -138,7 +138,7 @@ if __name__ == "__main__":
     import sys
     
     if len(sys.argv)<2:
-        find_error(1000,10./500.)
+        find_error(100,10/100.)
     else:
         if len(sys.argv)>2:
             k = int(sys.argv[2])
