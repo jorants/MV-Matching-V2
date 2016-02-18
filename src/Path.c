@@ -39,9 +39,34 @@ void walk_down_path(list_MVNodeP * list,MVNodeP start){
 }
 
 
-inline MVNodeP jump_bridge(MVNodeP cur){
+inline MVNodeP jump_bridge(list_MVNodeP * list,MVNodeP cur){
   debug("%i :: %p %p %i %i\n",cur->N,cur->ddfs_red,cur->ddfs_green,cur->ddfs_red->N,cur->ddfs_green->N);
-  return cur->ddfs_green == cur ? cur->ddfs_red : cur->ddfs_green;
+  if(cur->ddfs_green == cur){
+    return cur->ddfs_red;
+  }else if(cur->ddfs_red == cur){
+    return cur->ddfs_green;
+  }else if(bud_star_includes(cur->ddfs_green,cur)){ //have to jump to get to the bridge
+
+    int before = list->length;
+    MVNodeP bud = cur->ddfs_green;
+    while(bud != cur){
+      bud = walk_blossom(list,bud);
+    }
+    reverse(list,before,list->length);
+    return cur->ddfs_red;
+  }else{ //jump and then step from red
+    
+    int before = list->length;
+    MVNodeP bud = cur->ddfs_red;
+    while(bud != cur){
+      bud = walk_blossom(list,bud);
+    }
+    reverse(list,before,list->length);
+
+    return cur->ddfs_green;
+  }
+
+  
 }
 
 
@@ -57,7 +82,7 @@ MVNodeP walk_blossom(list_MVNodeP * list,MVNodeP cur){
     //walk up, then down
     cur = walk_blossom_up(list,cur);
     MVNodeP before = cur;
-    cur = jump_bridge(cur);    
+    cur = jump_bridge(list,cur);    
     cur = walk_blossom_down(list,cur,before);
   }
   debug("}\n");
@@ -99,7 +124,7 @@ MVNodeP walk_blossom_up(list_MVNodeP * list,MVNodeP cur){
     add_to_list((*list),cur);
     debug( "%i\n",cur->N);
     if(cur->above && cur->above->below != cur  &&//at a crossing or a jump 
-       cur->above->below->bud == cur){//(cur->above->below->ddfs_green !=  cur->ddfs_green || cur->above->below->ddfs_red !=  cur->ddfs_red)){
+       bud_star_includes(cur->above->below,cur)){
       //About to jump over something
       int before = list->length;
       MVNodeP bud = cur->above->below;

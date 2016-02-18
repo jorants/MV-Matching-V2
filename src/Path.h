@@ -16,7 +16,7 @@ void reverse(list_MVNodeP *list,int from, int to);
 //function for the finding of a path, not for walking in a blossom
 void walk_down_path(list_MVNodeP * list,MVNodeP start);
 
-MVNodeP jump_bridge(MVNodeP cur);
+MVNodeP jump_bridge(list_MVNodeP * list,MVNodeP cur);
 
 //Walks a blossom from the entry node to the bud.
 //It does not add the bud, it does add the entry node

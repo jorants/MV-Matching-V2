@@ -53,5 +53,6 @@ void reset_node(MVNodeP node);
 #define bud(node) node->bud;
 
 MVNodeP bud_star(MVNodeP c);
+int bud_star_includes(MVNodeP c,MVNodeP goal);
 
 #endif

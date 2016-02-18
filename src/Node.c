@@ -37,8 +37,18 @@ inline void reset_node(MVNodeP node){
 }
 
 
-inline MVNodeP bud_star(MVNodeP c){
+MVNodeP bud_star(MVNodeP c){
   MVNodeP b = bud(c);
   //debug(">> %i\n",c->N);
   return b ?  bud_star(b) : c;
+}
+
+
+int bud_star_includes(MVNodeP c,MVNodeP goal){
+  if(c == goal)
+    return true;
+  
+  MVNodeP b = bud(c);
+  //debug(">> %i\n",c->N);
+  return b ?  bud_star_includes(b,goal) : false;
 }

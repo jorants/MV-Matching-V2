@@ -43,9 +43,6 @@
     int succes = false;							\
     while(S.length > 0){	       /*Check wether we hit the end of a backtrack*/ \
       Nx = popp(S);							\
-      debug("Nx->n2->N:%i\n",Nx->n2->N);				\
-      debug("bud_star(Nx->n2)->N:%i\n",bud_star(Nx->n2)->N);		\
-      debug("bud_star(Nx->n2)->visited:%i\n",bud_star(Nx->n2)->visited); \
       if(bud_star(Nx->n2)->visited !=true){				\
 	succes = true;							\
 	break;								\
@@ -126,12 +123,12 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	 R->min_level >0 || G->min_level>0){    //we need some walking still
 
 
-    debug("129: %p %p\n",Nr,Ng);
+
     while(Nr && Ng && L(Nr) != L(Ng)){
       while(Nr && L(Nr) > L(Ng)){ //quit if we have no stack left
 	step_into(R,Nr,Sr);
       }
-      debug("124: %p %p\n",Nr,Ng);
+
       if(Nr == NULL){ //backtracked till end of stack, jump back tpo lowest bottleneck
 	debug("backtrack red failed\n");
 	Nr = &red_before;
@@ -144,7 +141,7 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       while(Ng && L(Nr) < L(Ng)){
 	step_into(G,Ng,Sg);
       }
-      debug("147: %p %p\n",Nr,Ng);
+
       if(Ng == NULL){ //backtracked till end of stack, jump back tpo lowest bottleneck
 	debug("backtrack green failed\n");
 	Ng = &green_before;
@@ -156,7 +153,6 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       }
     }
     
-    debug("159: %p %p\n",Nr,Ng);
 
     debug(":: %i %i \n",Nr->n2->N,Ng->n2->N);
     debug("  -> Sr : ");
@@ -199,10 +195,10 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       }
     }else{
       //now Nr!=Ng
-      debug("186: %i %i\n",Nr->n2->N,Ng->n2->N);
+
       step_into(R,Nr,Sr);
       step_into(G,Ng,Sg);
-      debug("189: %p %p\n",Nr,Ng);
+
     }
   }
   return DDFS_PATH;
