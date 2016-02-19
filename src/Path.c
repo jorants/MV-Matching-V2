@@ -12,9 +12,10 @@ void find_path(MVNodeP n1,MVNodeP n2,MVGraph* g){
 void reverse(list_MVNodeP *list,int from, int to){
   int i;
   MVNodeP tmp;
-  for(i=from;i<from + (to-from)/2;i++){
-    tmp = list->list[i];
-    list->list[i] = list->list[to-i-1];
+  int d = (to-from);
+  for(i=0;i<d/2;i++){
+    tmp = list->list[i+from];
+    list->list[i+from] = list->list[to-i-1];
     list->list[to-i-1] = tmp;
   }
   

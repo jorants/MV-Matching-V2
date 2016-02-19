@@ -71,6 +71,7 @@ int max_match_phase(MVGraph * g){
 
 
 inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
+  debug("to \%i\n",to->N);
   level++; 
   int tl = to->min_level;
   if(tl >= level){
@@ -122,7 +123,7 @@ void MIN(MVGraph * g,int i){
 	//need matched edge
 	step_to(g,current->match,current,i);
       }
-
+      debug("}\n");
     });
 }
 MVNodeP last_n1 = NULL,last_n2 = NULL;

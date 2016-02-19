@@ -191,13 +191,8 @@ if __name__ == "__main__":
             k = int(sys.argv[2])
         else:
             k=1
-        simplefy(sys.argv[1],k)
-        simplefy(sys.argv[1],k)
-        simplefy(sys.argv[1],k/3)
-        simplefy(sys.argv[1],k/3)
-        simplefy(sys.argv[1],1)
-        simplefy(sys.argv[1],1)
-        simplefy_nums(sys.argv[1])
-
-
-    
+        while k>0:
+            simplefy(sys.argv[1],k)
+            k/=3
+            print "------",k,"-------"
+        simplefy_nums(sys.argv[1])    
