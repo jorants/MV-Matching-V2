@@ -29,6 +29,7 @@ void walk_down_path(list_MVNodeP * list,MVNodeP start){
       //Stept into a blossom
       debug("Steped into blossom\n");
       cur = walk_blossom(list,cur);
+
     }else{
       debug( "%i\n",cur->N);
       add_to_list((*list),cur);

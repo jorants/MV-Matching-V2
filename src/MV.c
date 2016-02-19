@@ -1,5 +1,5 @@
 #include "MV.h"
-
+#include<math.h>
 inline int tenacity(MVNodeP n1,MVNodeP n2){
   if(n1->match == n2){
     //matched bridge
@@ -17,6 +17,8 @@ inline int tenacity(MVNodeP n1,MVNodeP n2){
 }
 
 
+
+
 void max_match(MVGraph * g){
   //for once set the levels by hand, next time reset does this
   MVNodeP itt3;
@@ -28,9 +30,20 @@ void max_match(MVGraph * g){
     });  
   int p = 0;
   debug("========== Phase %i ===========\n",p++);
-  while(g->nodes.length / 2 > g->matchnum && max_match_phase(g)){
+
+  int found = max_match_phase(g);
+  int last_found = -1;
+  while(g->nodes.length / 2 > g->matchnum && found){
     debug("========== Phase %i ===========\n",p++);
     reset_graph(g);
+    found = max_match_phase(g);
+    debug("%i\n",found);
+    if(found && found <= last_found){
+      printf("CODE");
+      exit(0);
+    }
+    last_found = found;
+
   }
 
 }
@@ -44,14 +57,16 @@ int max_match_phase(MVGraph * g){
     debug("----------------------- %i ------------------\n",i);
     //printf(":: %i %i \n",g->todonum ,g->bridgenum);
     if(g->todonum<=0 && g->bridgenum<=0){
-      return false;
+      return 0;
     }
     MIN(g,i);
     found = MAX(g,i);
     
   }
-  
-  return found;
+  if(found)
+    return i;
+  else
+    return 0;
 }
 
 
@@ -110,7 +125,7 @@ void MIN(MVGraph * g,int i){
 
     });
 }
-
+MVNodeP last_n1 = NULL,last_n2 = NULL;
 int MAX(MVGraph * g,int i){
   MVBridge * current;
   int found = false;
@@ -121,7 +136,7 @@ int MAX(MVGraph * g,int i){
       if(n1->deleted || n2->deleted)
 	continue;
 
-
+      
       int result = DDFS(g,n1,n2);
       if(result == DDFS_EMPTY){
 	debug("EMPTY\n");
@@ -144,6 +159,7 @@ int MAX(MVGraph * g,int i){
 	    itt->bud = b;
 	    //set the maxlevel
 	    set_max_level(itt,current_ten - itt->min_level);
+	    add_to_level(g,itt->max_level,itt);
 	    MVNodeP hanging;
 	    for_each(hanging,itt->hanging_bridges,{
 		//check all the hanging bridges to see if they are known now

@@ -9,7 +9,7 @@
   do{								\
     MVNodeP pred;						\
     for_each(pred,cur->preds,{					\
-	if(pred != NULL &&  bud_star(pred)->visited!=true){	\
+	if(pred != NULL){	\
 	  MVEdge * tmp;						\
 	  alloc_in_list((stack),tmp);				\
 	  tmp->n1 = cur;					\
@@ -32,39 +32,34 @@
  */
 #define prepare_next(Nx)			\
   if(Nx) {					\
-    if(Nx->n1)					\
+    if(Nx->n1){					\
+      debug("%i --> %i\n",Nx->n1->N,Nx->n2->N);		\
       Nx->n1->below = Nx->n2;			\
+    }						\
     Nx->n2 = bud_star(Nx->n2);			\
   }
 
 
 #define node_from_stack(Nx,S)			\
-  do{									\
-    int succes = false;							\
-    while(S.length > 0){	       /*Check wether we hit the end of a backtrack*/ \
-      Nx = popp(S);							\
-      if(bud_star(Nx->n2)->visited !=true){				\
-	succes = true;							\
-	break;								\
-      }									\
-    }									\
-    debug("hier\n");							\
-    if(succes == false)							\
-      Nx = NULL;							\
-  }while(0)
+  if(S.length > 0)	       /*Check wether we hit the end of a backtrack*/ \
+    Nx = popp(S);							\
+  else									\
+    Nx = NULL;								\
 
 /*
   Steps to the next node
  */
 #define step_into(C,Nx,S)						\
     prepare_next(Nx);              /* Set below pointer and calculate bud_star*/ \
-    Nx->n2->above = Nx->n1;						\
-    C = Nx->n2;                   /*Change center of DFS*/		\
-    C->visited = true;							\
-    C->ddfs_green = green_top;						\
-    C->ddfs_red = red_top;						\
-    add_to_list(result->nodes_seen,C);					\
-    add_pred_to_stack(C,S);      /*Add al unseen predecesors*/		\
+    if(Nx->n2->visited == false){						\
+      Nx->n2->above = Nx->n1;						\
+      C = Nx->n2;                   /*Change center of DFS*/		\
+      C->visited = true;						\
+      C->ddfs_green = green_top;					\
+      C->ddfs_red = red_top;						\
+      add_to_list(result->nodes_seen,C);				\
+      add_pred_to_stack(C,S);      /*Add al unseen predecesors*/	\
+    }									\
     node_from_stack(Nx,S)
 
 int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
@@ -134,6 +129,7 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	Nr = &red_before;
 	MVNodeP tmp_itt = red_before.n1; 
 	while(tmp_itt->above){
+	  debug("reset: %i -> %i\n",tmp_itt->above->N,tmp_itt->N);
 	  tmp_itt->above->below = tmp_itt;
 	  tmp_itt = tmp_itt->above;
 	}
@@ -147,6 +143,7 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	Ng = &green_before;
 	MVNodeP tmp_itt = green_before.n1; 
 	while(tmp_itt->above){
+	  debug("reset: %i -> %i\n",tmp_itt->above->N,tmp_itt->N);
 	  tmp_itt->above->below = tmp_itt;
 	  tmp_itt = tmp_itt->above;
 	}
@@ -178,8 +175,8 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	
       }else if(Sg.length > 0){
 	debug("backtrack green:\n");
-	green_before.n1 = Nr->n1;
-	green_before.n2 = Nr->n2;
+	green_before.n1 = Ng->n1;
+	green_before.n2 = Ng->n2;
 	prepare_next(Ng);
 	node_from_stack(Ng,Sg);
 	
@@ -195,11 +192,12 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       }
     }else{
       //now Nr!=Ng
-
+      debug("Nr != Ng\n");
       step_into(R,Nr,Sr);
       step_into(G,Ng,Sg);
-
+      debug("normal step to: %i(%i) %i(%i)\n",R->N,R->min_level,G->N,G->min_level);
     }
+    
   }
   return DDFS_PATH;
 }
