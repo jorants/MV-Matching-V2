@@ -74,7 +74,7 @@ def libmv(G,inform = False):
         import simp
         simp.simp_data(G)
         sys.exit()
-    return t,count,td/10.
+    return t,count,td
 
 
 def lemon(G,inform = False):
@@ -88,7 +88,7 @@ def lemon(G,inform = False):
         
     count = int(out.split("\n")[-1].split(":")[1].strip())
     t = float(out.split("\n")[3].split(":")[1].strip())
-    return t,count,td/10.
+    return t,count,td
 
 
 def lemon_greedy(G,inform = False):
@@ -102,7 +102,7 @@ def lemon_greedy(G,inform = False):
         
     count = int(out.split("\n")[-1].split(":")[1].strip())
     t = float(out.split("\n")[3].split(":")[1].strip())
-    return t,count,td/10.
+    return t,count,td
 
 
 def libmv_greedy(G,inform = False):
@@ -140,7 +140,7 @@ def mvjoran_greedy(G,inform = False):
 
 
     try:
-        return float(out.split("\n")[0]),int(out.split("\n")[1]),td/10.
+        return float(out.split("\n")[0]),int(out.split("\n")[1]),td
     except Exception as e:
         print e
         fp = open("error.bu","w")
@@ -273,5 +273,5 @@ def plot_hell(x):
     plt.savefig("plot.png")
 
 if __name__ == "__main__":
-    X = range(10,1000,10)
-    plot_two(X,lambda i: 0.1)
+    X = range(10,100000,5000)
+    plot_two(X,lambda i: 50./i)

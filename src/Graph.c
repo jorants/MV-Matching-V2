@@ -82,7 +82,7 @@ void reset_graph(MVGraph * g){
 }
 
 
-void MV_add_edge(MVGraph * g,int a,int b, int greedy){
+inline void MV_add_edge(MVGraph * g,int a,int b, int greedy){
   MVNodeP na = getp(g->nodes,a);
   MVNodeP nb = getp(g->nodes,b);
   add_to_list(na->edges,nb);
