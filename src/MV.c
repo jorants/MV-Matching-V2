@@ -1,5 +1,5 @@
 #include "MV.h"
-#include<math.h>
+
 inline int tenacity(MVNodeP n1,MVNodeP n2){
   if(n1->match == n2){
     //matched bridge
@@ -28,24 +28,11 @@ void max_match(MVGraph * g){
 	set_min_level(itt3,0);
       }
     });  
-  int p = 0;
-  debug("========== Phase %i ===========\n",p++);
-
   int found = max_match_phase(g);
-  int last_found = -1;
   while(g->nodes.length / 2 > g->matchnum && found){
-    debug("========== Phase %i ===========\n",p++);
     reset_graph(g);
     found = max_match_phase(g);
-    debug("%i\n",found);
-    if(found && found <= last_found){
-      printf("CODE");
-      exit(0);
-    }
-    last_found = found;
-
   }
-
 }
 
 int max_match_phase(MVGraph * g){
@@ -54,31 +41,27 @@ int max_match_phase(MVGraph * g){
 
   
   for(i=0;i<g->nodes.length/2+1 && (!found);i++){
-    debug("----------------------- %i ------------------\n",i);
     //printf(":: %i %i \n",g->todonum ,g->bridgenum);
     if(g->todonum<=0 && g->bridgenum<=0){
-      return 0;
+      return false;
     }
     MIN(g,i);
     found = MAX(g,i);
     
   }
-  if(found)
-    return i;
-  else
-    return 0;
+  return found;
 }
 
 
 inline void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level){
-  debug("to \%i\n",to->N);
+
   level++; 
   int tl = to->min_level;
   if(tl >= level){
     if(tl != level){
       add_to_level(g,level,to);
+      set_min_level(to,level);
     }
-    set_min_level(to,level);
     add_to_list(to->preds,from);
     to->number_preds++;
     MVNodePos * np;
@@ -105,7 +88,6 @@ void MIN(MVGraph * g,int i){
   
   for_each(current,get(g->levels,i),{
       g->todonum--;
-      debug("Walking from %i {\n",current->N);
       if(i%2==0){
 	//need unmatched edge
 	MVNodeP edge;
@@ -123,7 +105,6 @@ void MIN(MVGraph * g,int i){
 	//need matched edge
 	step_to(g,current->match,current,i);
       }
-      debug("}\n");
     });
 }
 MVNodeP last_n1 = NULL,last_n2 = NULL;
@@ -140,7 +121,6 @@ int MAX(MVGraph * g,int i){
       
       int result = DDFS(g,n1,n2);
       if(result == DDFS_EMPTY){
-	debug("EMPTY\n");
 	
 	continue;
       }
@@ -156,7 +136,6 @@ int MAX(MVGraph * g,int i){
 	int current_ten = i*2+1;
 	for_each(itt,g->last_ddfs.nodes_seen,{
 	    //set the bbud for all nodes
-	    debug("Bud (%i) = %i\n",itt->N,b->N);
 	    itt->bud = b;
 	    //set the maxlevel
 	    set_max_level(itt,current_ten - itt->min_level);

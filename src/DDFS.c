@@ -33,7 +33,6 @@
 #define prepare_next(Nx)			\
   if(Nx) {					\
     if(Nx->n1){					\
-      debug("%i --> %i\n",Nx->n1->N,Nx->n2->N);		\
       Nx->n1->below = Nx->n2;			\
     }						\
     Nx->n2 = bud_star(Nx->n2);			\
@@ -64,7 +63,6 @@
 
 int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 
-  debug("--- DDFS(%i %i) --- \n",green_top->N,red_top->N);
 
   //result is stored in the graph to avoid free's and mallocs
   DDFS_result * result = &(g->last_ddfs);
@@ -105,12 +103,6 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
   }
 
   
-
-  debug("Starting:");
-  if(Nr->n2)
-    debug(" %i",Nr->n2->N);
-  if(Ng->n2)
-    debug(" %i\n",Ng->n2->N);
  
 
   
@@ -125,11 +117,9 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       }
 
       if(Nr == NULL){ //backtracked till end of stack, jump back tpo lowest bottleneck
-	debug("backtrack red failed\n");
 	Nr = &red_before;
 	MVNodeP tmp_itt = red_before.n1; 
 	while(tmp_itt->above){
-	  debug("reset: %i -> %i\n",tmp_itt->above->N,tmp_itt->N);
 	  tmp_itt->above->below = tmp_itt;
 	  tmp_itt = tmp_itt->above;
 	}
@@ -139,11 +129,9 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       }
 
       if(Ng == NULL){ //backtracked till end of stack, jump back tpo lowest bottleneck
-	debug("backtrack green failed\n");
 	Ng = &green_before;
 	MVNodeP tmp_itt = green_before.n1; 
 	while(tmp_itt->above){
-	  debug("reset: %i -> %i\n",tmp_itt->above->N,tmp_itt->N);
 	  tmp_itt->above->below = tmp_itt;
 	  tmp_itt = tmp_itt->above;
 	}
@@ -151,19 +139,10 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
     }
     
 
-    debug(":: %i %i \n",Nr->n2->N,Ng->n2->N);
-    debug("  -> Sr : ");
-    MVEdge itt;
-    for_each(itt,Sr,{debug(" %i",itt.n2->N);});
-    debug("\n  -> Sg : ");
-    for_each(itt,Sg,{debug(" %i",itt.n2->N);});
-    debug("\n");
-
     
     if(bud_star(Nr->n2)  == bud_star(Ng->n2)){
       //backtrack
       if(Sr.length > 0){
-	debug("backtrack red:\n");
 	red_before.n1 = Nr->n1;
 	red_before.n2 = Nr->n2;
 	prepare_next(Nr);
@@ -174,7 +153,6 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	  Nr = &red_before;
 	
       }else if(Sg.length > 0){
-	debug("backtrack green:\n");
 	green_before.n1 = Ng->n1;
 	green_before.n2 = Ng->n2;
 	prepare_next(Ng);
@@ -192,10 +170,8 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
       }
     }else{
       //now Nr!=Ng
-      debug("Nr != Ng\n");
       step_into(R,Nr,Sr);
       step_into(G,Ng,Sg);
-      debug("normal step to: %i(%i) %i(%i)\n",R->N,R->min_level,G->N,G->min_level);
     }
     
   }
