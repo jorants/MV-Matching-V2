@@ -31,7 +31,7 @@ typedef struct MVGraph{
 MVGraph * new_graph(int size);
 void delete_graph(MVGraph * g);
 void reset_graph(MVGraph * g);
-void MV_add_edge(MVGraph * g,int a,int b, int greedy);
+void MV_add_edge(MVGraph * g,int a,int b);
 void add_to_level(MVGraph * g,int level,MVNodeP node);
 void add_to_bridges(MVGraph * g,int level,MVNodeP n1,MVNodeP n2);
 #endif

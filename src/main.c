@@ -13,10 +13,8 @@
 #define dt(b,a) ( (double) (a.tv_usec - b.tv_usec) / 1000000 + (double) (a.tv_sec - b.tv_sec))
 
 int main(int argc, char** argv){
-  int gr = false;
-  if(argc>2)
-    gr = true;
-  else if (argc<2)
+
+  if (argc<2)
     exit(0);
 
 
@@ -42,7 +40,7 @@ int main(int argc, char** argv){
     int n1,n2;
     res = fscanf(fp,"%i %i\n",&n1,&n2);
     if(res==2)
-      MV_add_edge(g,n1,n2,gr);
+      MV_add_edge(g,n1,n2);
   }
 
 

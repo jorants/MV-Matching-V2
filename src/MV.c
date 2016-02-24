@@ -1,5 +1,27 @@
 #include "MV.h"
 
+
+
+void greedy_init(MVGraph * g){
+  MVNodeP current;
+  for_eachp(current,g->nodes,{
+      if(current->match == UNMATCHED){
+	MVNodeP other;
+	for_each(other,current->edges,{
+	    if(other->match == UNMATCHED){
+	      //todo match
+	      other->match = current;
+	      current->match = other;
+	      g->matchnum++;
+	      break;
+	    }
+	  });
+	
+      }
+    });
+}
+
+
 inline int tenacity(MVNodeP n1,MVNodeP n2){
   if(n1->match == n2){
     //matched bridge
@@ -20,6 +42,7 @@ inline int tenacity(MVNodeP n1,MVNodeP n2){
 
 
 void max_match(MVGraph * g){
+  greedy_init(g);
   //for once set the levels by hand, next time reset does this
   MVNodeP itt3;
   for_eachp(itt3,g->nodes,{

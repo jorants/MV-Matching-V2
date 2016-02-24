@@ -19,5 +19,6 @@ int MAX(MVGraph * g,int i);
 void step_to(MVGraph * g,MVNodeP to,MVNodeP from,int level);
 int tenacity(MVNodeP n1,MVNodeP n2);
 
+void greedy_init(MVGraph * g);
 
 #endif
