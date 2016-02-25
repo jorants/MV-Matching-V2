@@ -1,5 +1,6 @@
 all:
 	cd src && make
+	mkdir -p bin
 	cp src/main bin/
 
 clean:
