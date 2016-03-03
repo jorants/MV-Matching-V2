@@ -32,14 +32,15 @@ int main(int argc, char** argv){
     {
       fp = fopen (fn, "r");
     }
-  int V;
-  int res = fscanf(fp,"%i\n",&V);
-  if(res!=1)
+  int V,E;
+  int res = fscanf(fp,"%i %i\n",&V,&E);
+  if(res!=2)
     {
       printf("Error in input\n");
       exit(0);
     }
-  MVGraph * g = new_graph(V);
+
+  MVGraph * g = new_graph_edges(V,E);
   res = 2;
   
   while(res == 2){
@@ -51,7 +52,7 @@ int main(int argc, char** argv){
 
 
   struct timeval start,end;
-  
+  greedy_init(g);  
   gettimeofday(&start, NULL);
   max_match(g);
   gettimeofday(&end, NULL);

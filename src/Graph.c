@@ -1,13 +1,25 @@
 #include "Graph.h"
 
-MVGraph * new_graph(int size){
+MVGraph * new_graph_edges(int size,int num_edges){
+  int degree = (4*num_edges)/size;
+  return new_graph(size,degree);
+}
+
+MVGraph * new_graph_constant(int size){
+  return new_graph(size,64);
+}
+
+
+MVGraph * new_graph(int size,int degree){
+  if(degree<4)
+    degree = 4;
   MVGraph * res = malloc(sizeof(MVGraph));
   init_list(res->nodes,MVNode,size);
   res->nodes.length = size;//just alloc al the space, we will init it.
   int i = 0;
   MVNodeP itt;
   for_eachp(itt,res->nodes,{
-      init_node(itt,i++);
+      init_node(itt,i++,degree);
     });
 
   init_list(res->levels,list_MVNodeP,size/2+1);
@@ -81,13 +93,6 @@ void reset_graph(MVGraph * g){
     });  
 }
 
-
-inline void MV_add_edge(MVGraph * g,int a,int b){
-  MVNodeP na = getp(g->nodes,a);
-  MVNodeP nb = getp(g->nodes,b);
-  add_to_list(na->edges,nb);
-  add_to_list(nb->edges,na);
-}
 
 
 void add_to_level(MVGraph * g,int level,MVNodeP node){

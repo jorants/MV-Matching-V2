@@ -1,13 +1,13 @@
 #include "Node.h"
 
 
-void init_node(MVNodeP node,int label){
+void init_node(MVNodeP node,int label, int degree){
   node->N = label;
-  init_list(node->edges,MVNodeP,4);
+  init_list(node->edges,MVNodeP,degree);
   node->match = UNMATCHED;
-  init_list(node->preds,MVNodeP,4);
-  init_list(node->pred_to,MVNodePos,4);
-  init_list(node->hanging_bridges,MVNodeP,2);
+  init_list(node->preds,MVNodeP,degree);
+  init_list(node->pred_to,MVNodePos,degree);
+  init_list(node->hanging_bridges,MVNodeP,4);
   reset_node(node);
 }
 void uninit_node(MVNodeP node){
