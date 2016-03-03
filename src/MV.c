@@ -42,7 +42,7 @@ inline int tenacity(MVNodeP n1,MVNodeP n2){
 
 
 void max_match(MVGraph * g){
-  greedy_init(g);
+
   //for once set the levels by hand, next time reset does this
   MVNodeP itt3;
   for_eachp(itt3,g->nodes,{

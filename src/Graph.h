@@ -28,10 +28,23 @@ typedef struct MVGraph{
 } MVGraph;
 
 
-MVGraph * new_graph(int size);
+MVGraph * new_graph(int size,int degree);
 void delete_graph(MVGraph * g);
 void reset_graph(MVGraph * g);
-void MV_add_edge(MVGraph * g,int a,int b);
 void add_to_level(MVGraph * g,int level,MVNodeP node);
 void add_to_bridges(MVGraph * g,int level,MVNodeP n1,MVNodeP n2);
+
+MVGraph * new_graph_edges(int size,int num_edges);
+MVGraph * new_graph_constant(int size);
+
+
+#define MV_add_edge(g,a, b) \
+  do{\
+    MVNodeP na = getp(g->nodes,a);		\
+    MVNodeP nb = getp(g->nodes,b);		\
+    add_to_list(na->edges,nb);			\
+    add_to_list(nb->edges,na);			\
+  }while(0);
+
+
 #endif

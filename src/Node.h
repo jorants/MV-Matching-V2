@@ -29,7 +29,7 @@ typedef struct MVNode{
 
 
 
-void init_node(MVNodeP node,int label);
+void init_node(MVNodeP node,int label,int degree);
 void uninit_node(MVNodeP node);
 void reset_node(MVNodeP node);
 

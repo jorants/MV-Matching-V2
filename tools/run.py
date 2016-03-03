@@ -39,7 +39,7 @@ def hell(n):
 
 
 def to_form_new(g):
-    res = "%i\n" % (g.number_of_nodes())
+    res = "%i %i\n" % (g.number_of_nodes(),g.number_of_edges())
     for e in g.edges():
         res+= "%i %i\n" % e
     return res+"END\n"
@@ -164,7 +164,6 @@ def plot_bi(x,p = lambda i: 10./i):
         jor.append(res[3][0])
         jorg.append(res[4][0])
         counts =  map(lambda x: x[1],res)
-        print counts
         if len(set(counts))>1:
             print counts
     
@@ -227,6 +226,7 @@ def plot_two(x,p = lambda i: 10./i):
         lemT.append(res[0][2])
         jorgT.append(res[1][2])
         print res[1]
+        print res[0]
         counts =  map(lambda x: x[1],res)
         print counts
         if len(set(counts))>1:
@@ -273,5 +273,5 @@ def plot_hell(x):
     plt.savefig("plot.png")
 
 if __name__ == "__main__":
-    X = range(10,100000,5000)
-    plot_two(X,lambda i: 50./i)
+    X = range(10,10000,100)
+    plot_two(X,lambda i: 0.1)
