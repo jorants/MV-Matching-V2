@@ -1,3 +1,9 @@
+/*
+This file is intended to serve as a usage example.
+Call with:
+./main [filename]
+ */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
@@ -5,11 +11,11 @@
 #include <sys/time.h>
 
 
-
 #include "list.h"
 #include "Graph.h"
 #include "MV.h"
 
+//for time measurement
 #define dt(b,a) ( (double) (a.tv_usec - b.tv_usec) / 1000000 + (double) (a.tv_sec - b.tv_sec))
 
 int main(int argc, char** argv){

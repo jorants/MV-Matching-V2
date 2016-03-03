@@ -1,3 +1,18 @@
+/*
+This file defines a set of macros that can be used to make a list of any other datastrucure.
+The basic idea is that the list is a malloced array with its size (number of objects allocated) and length (lenght of the list) stored with it.
+If length reaches size, then the list is realloced.
+There are some complications because sometimes we want to store the list as a pointer and sometimes as a local variable.
+Also, sometimes we would like a pointer to the position in the list and sometimes we would like the value to be returned.
+To solve this, all functions come in three flavors:
+- expect list variable and return/set by value
+- excpect a list pointer, not variable, return/set by value
+- expect list variable and return/set by pointer
+See the coresponding comments.
+
+To define the structure of a new list just add list_struct(type) to some file.
+This will create a new type list_type
+*/
 #ifndef LIST_H
 #define LIST_H
 #include<stdlib.h>
@@ -9,11 +24,6 @@
   type * list;							\
   } list_##type;							
   
-
-
-
-//we can not derefrence the lists outside the loop since they might change during the loop
-
 //Loop over a list that is pointed to  and use the value
 #define for_p_each(itt,l,f)						\
   do{									\
@@ -22,7 +32,6 @@
       itt = (l)->list[list_itterator];					\
       f }								\
   }while(0);
-
 
 //Loop over a list and use the value
 #define for_each(itt,l,f)						\
@@ -33,7 +42,6 @@
       f }								\
   }while(0);
 
-
 //loop over a list and use the pointers to the elements
 #define for_eachp(itt,l,f)						\
   do{									\
@@ -42,6 +50,7 @@
       itt = l.list+list_itterator;					\
       f }								\
   }while(0);
+
 
 
 //Destroys a list created with make_list

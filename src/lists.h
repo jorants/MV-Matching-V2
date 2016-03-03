@@ -1,3 +1,6 @@
+/*
+This file creates the actual list structures, not much going on...
+ */
 #ifndef LISTS_H
 #define LISTS_H
 #include "list.h"
