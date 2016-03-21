@@ -150,6 +150,7 @@ int MAX(MVGraph * g,int i){
       else if(result == DDFS_PATH){
 	find_path(n1,n2,g);
 	augment_path(g);
+	return true;
 	remove_path(g);
 	found = true;
       }else{
