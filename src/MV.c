@@ -128,6 +128,11 @@ int MAX(MVGraph * g,int i){
       else if(result == DDFS_PATH){
 	find_path(n1,n2,g);
 	augment_path(g);
+	if(g->nodes.length / 2 <= g->matchnum)
+	  {
+	    //perfect matching
+	    return true;
+	  }
 	remove_path(g);
 	found = true;
       }else{
