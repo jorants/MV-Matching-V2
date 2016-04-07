@@ -7,7 +7,7 @@ Namres of lists are declared in lists.h
 #define TYPEDEFS_H
 
 
-#define debug(...) printf(__VA_ARGS__)
+//#define debug(...) printf(__VA_ARGS__)
 #define debug(...)
 
 //Used to store vertex information
