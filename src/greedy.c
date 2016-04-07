@@ -116,6 +116,7 @@ void greedy_init(MVGraph * g){
 	for_each(other,current->edges,{
 	    if(other->match == UNMATCHED){
 	      //todo match
+	      debug("%i --- %i\n",current->N,other->N);
 	      other->match = current;
 	      current->match = other;
 	      g->matchnum++;

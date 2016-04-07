@@ -2,6 +2,7 @@
 
 
 void find_path(MVNodeP n1,MVNodeP n2,MVGraph* g){
+  debug("find path: %i %i\n",n1->N,n2->N);
   g->path_found.length = 0;
   walk_down_path(&g->path_found, n1);
   reverse(&g->path_found, 0,g->path_found.length);  
@@ -23,8 +24,18 @@ void reverse(list_MVNodeP *list,int from, int to){
 
 //function for the finding of a path, not for walking in a blossom
 void walk_down_path(list_MVNodeP * list,MVNodeP start){
+  debug("Walk down path: %i\n",start->N);  
   MVNodeP cur = start;
   while(cur){
+
+    debug("%i:",cur->N);
+    if(cur->above){
+        debug(" ^%i^ ",cur->above->N);
+    }
+    if(cur->below){
+        debug(" v%iv ",cur->below->N);
+    }
+    debug("\n");
     if( cur->bud != NULL){
       //Stept into a blossom
       cur = walk_blossom(list,cur);
@@ -71,6 +82,7 @@ inline MVNodeP jump_bridge(list_MVNodeP * list,MVNodeP cur){
 //Walks a blossom from the entry node to the bud.
 //It does not add the bud, it does add the entry node
 MVNodeP walk_blossom(list_MVNodeP * list,MVNodeP cur){
+  debug("Walk blossom from: %i\n",cur->N);
   if(outer(cur)){
     //just walk down
     cur = walk_blossom_down(list,cur,NULL);
@@ -87,6 +99,7 @@ MVNodeP walk_blossom(list_MVNodeP * list,MVNodeP cur){
 //walks down until it reacheds the bud of a blossom
 //It does not add the bud, it does add the first node
 MVNodeP walk_blossom_down(list_MVNodeP * list,MVNodeP cur,MVNodeP before){
+  debug("Walk blossom down: %i\n",cur->N);  
   if(before==NULL)
     before = cur;
   MVNodeP b = cur->bud;
@@ -108,7 +121,7 @@ MVNodeP walk_blossom_down(list_MVNodeP * list,MVNodeP cur,MVNodeP before){
 //Walks up untill it reaches a bridge
 //It does add the bridge and the node it starts on
 MVNodeP walk_blossom_up(list_MVNodeP * list,MVNodeP cur){
-
+  debug("Walk blossom up: %i\n",cur->N);  
   while(cur){
     add_to_list((*list),cur);
     if(cur->above && cur->above->below != cur  &&//at a crossing or a jump 
@@ -136,6 +149,7 @@ void augment_path(MVGraph* g){
   MVNodeP* lll = g->path_found.list;
   int l = g->path_found.length;
   for(i=0;i<l-1;i+=2){
+    debug("%i --- %i\n",lll[i]->N,lll[i+1]->N);
     lll[i]->match = lll[i+1];
     lll[i+1]->match = lll[i];
   }

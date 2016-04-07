@@ -18,6 +18,16 @@ Call with:
 //for time measurement
 #define dt(b,a) ( (double) (a.tv_usec - b.tv_usec) / 1000000 + (double) (a.tv_sec - b.tv_sec))
 
+int is_edge(MVNodeP node,MVNodeP other){
+  MVNodeP edge;
+  for_each(edge,node->edges,{
+      if(other==edge){
+	return true;
+      }
+    });
+  return false;
+}
+
 int main(int argc, char** argv){
 
   if (argc<2)
@@ -61,6 +71,15 @@ int main(int argc, char** argv){
   
   MVNodeP node;
   for_eachp(node,g->nodes,{
+
+      if(node->match && !is_edge(node,node->match)){
+	printf("help");
+	debug(": %i %i",node->N,node->match->N);
+	printf("\n");
+      }else if(node->match){
+        debug("match: %i %i\n",node->N,node->match->N);	
+      }
+      
       if(node->match && node->match->match != node){
 	correct = false;
 	break;

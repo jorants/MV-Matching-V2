@@ -63,7 +63,8 @@
 
 int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 
-
+  MVNodeP reset_current;
+  MVNodeP reset_itt;
   //result is stored in the graph to avoid free's and mallocs
   DDFS_result * result = &(g->last_ddfs);
   //reset result
@@ -120,7 +121,16 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	Nr = &red_before;
 	MVNodeP tmp_itt = red_before.n1; 
 	while(tmp_itt->above){
-	  tmp_itt->above->below = tmp_itt;
+	  reset_current = tmp_itt->above;
+	  for_each(reset_itt,reset_current->preds,{
+	      if(reset_itt == NULL){
+		continue;
+	      }
+	      if(bud_star(reset_itt) == tmp_itt){
+		reset_current->below = reset_itt;
+		break;
+	      }
+	    });
 	  tmp_itt = tmp_itt->above;
 	}
       }
@@ -132,7 +142,16 @@ int DDFS(MVGraph * g,MVNodeP green_top,MVNodeP red_top){
 	Ng = &green_before;
 	MVNodeP tmp_itt = green_before.n1; 
 	while(tmp_itt->above){
-	  tmp_itt->above->below = tmp_itt;
+	  reset_current = tmp_itt->above;
+	  for_each(reset_itt,reset_current->preds,{
+	      if(reset_itt == NULL){
+		continue;
+	      }
+	      if(bud_star(reset_itt) == tmp_itt){
+		reset_current->below = reset_itt;
+		break;
+	      }
+	    });
 	  tmp_itt = tmp_itt->above;
 	}
       }

@@ -6,6 +6,10 @@ Namres of lists are declared in lists.h
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
+
+#define debug(...) printf(__VA_ARGS__)
+#define debug(...)
+
 //Used to store vertex information
 typedef struct MVNode MVNode;
 //Used to store the graph as a whole

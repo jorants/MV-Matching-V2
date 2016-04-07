@@ -13,9 +13,11 @@ def docmd(cmd,input):
 
 def remove(G,i,k):
     G = G.split("\n")
-    l = G[0]
+    l = G[0].split(" ")
+
     e = G[1:-2]
     e = e[:i]+e[i+k:]
+    l = l[0]+" " +str(len(e))
     return l +"\n"+ "\n".join(e) + "\nEND\n"
 
 

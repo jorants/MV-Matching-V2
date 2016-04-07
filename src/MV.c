@@ -31,8 +31,10 @@ void max_match(MVGraph * g){
     });  
   int found = max_match_phase(g);
   while(g->nodes.length / 2 > g->matchnum && found){
+    debug("===================================");
     reset_graph(g);
     found = max_match_phase(g);
+    debug("===================================");
   }
 }
 
@@ -127,6 +129,7 @@ int MAX(MVGraph * g,int i){
       }
       else if(result == DDFS_PATH){
 	find_path(n1,n2,g);
+        debug("+++++++");
 	augment_path(g);
 	if(g->nodes.length / 2 <= g->matchnum)
 	  {
