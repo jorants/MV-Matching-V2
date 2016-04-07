@@ -66,7 +66,8 @@ int main(int argc, char** argv){
   gettimeofday(&start, NULL);
   max_match(g);
   gettimeofday(&end, NULL);
-  
+
+  /*
   int correct  = true;
   
   MVNodeP node;
@@ -85,9 +86,10 @@ int main(int argc, char** argv){
 	break;
       }
     });
+  */
   delete_graph(g);
   printf("%f\n",dt(start,end));
   printf("%i\n",g->matchnum);  
-  printf("%i\n",correct);
+  //printf("%i\n",correct);
   return 0;
 }
